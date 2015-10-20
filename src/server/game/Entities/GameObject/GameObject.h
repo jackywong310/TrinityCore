@@ -594,12 +594,14 @@ enum GOState
 
 #define MAX_GO_STATE              3
 
+struct GameObjectGroupTemplateData;
+
 // from `gameobject`
 struct GameObjectData
 {
     explicit GameObjectData() : id(0), mapid(0), phaseMask(0), posX(0.0f), posY(0.0f), posZ(0.0f), orientation(0.0f),
                                 rotation0(0.0f), rotation1(0.0f), rotation2(0.0f), rotation3(0.0f), spawntimesecs(0),
-                                animprogress(0), go_state(GO_STATE_ACTIVE), spawnMask(0), artKit(0), dbData(true) { }
+                                animprogress(0), go_state(GO_STATE_ACTIVE), spawnMask(0), artKit(0), dbData(true), groupdata(nullptr) { }
     uint32 id;                                              // entry in gamobject_template
     uint16 mapid;
     uint32 phaseMask;
@@ -617,6 +619,23 @@ struct GameObjectData
     uint8 spawnMask;
     uint8 artKit;
     bool dbData;
+    GameObjectGroupTemplateData* groupdata;
+};
+
+enum GameObjectGroupFlags
+{
+    GAMEOBJECTGROUP_FLAG_NONE                   = 0x00000000,
+    GAMEOBJECTGROUP_FLAG_COMPATIBILITY_MODE     = 0x00000001,
+    GAMEOBJECTGROUP_FLAG_MANUAL_SPAWN           = 0x00000002,
+    GAMEOBJECTGROUP_FLAG_DYNAMIC                = 0x00000004
+};
+
+struct GameObjectGroupTemplateData
+{
+    uint32 groupId;
+    uint32 mapId;
+    uint32 flags;
+    bool isActive;
 };
 
 typedef std::vector<uint32> GameObjectQuestItemList;
@@ -652,7 +671,7 @@ class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>
         void RemoveFromWorld() override;
         void CleanupsBeforeDelete(bool finalCleanup = true) override;
 
-        bool Create(ObjectGuid::LowType guidlow, uint32 name_id, Map* map, uint32 phaseMask, float x, float y, float z, float ang, float rotation0, float rotation1, float rotation2, float rotation3, uint32 animprogress, GOState go_state, uint32 artKit = 0);
+        bool Create(ObjectGuid::LowType guidlow, uint32 name_id, Map* map, uint32 phaseMask, float x, float y, float z, float ang, float rotation0, float rotation1, float rotation2, float rotation3, uint32 animprogress, GOState go_state, uint32 artKit = 0, bool dynamic = false, uint32 spawnid = 0);
         void Update(uint32 p_time) override;
         GameObjectTemplate const* GetGOInfo() const { return m_goInfo; }
         GameObjectData const* GetGOData() const { return m_goData; }
@@ -768,7 +787,8 @@ class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>
         uint32 GetUseCount() const { return m_usetimes; }
         uint32 GetUniqueUseCount() const { return m_unique_users.size(); }
 
-        void SaveRespawnTime() override;
+        void SaveRespawnTime() override { SaveRespawnTime(0); }
+        void SaveRespawnTime(uint32 forceDelay, bool savetodb = true);
 
         Loot        loot;
 
@@ -821,6 +841,10 @@ class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>
         }
 
         void EventInform(uint32 eventId, WorldObject* invoker = NULL);
+
+        // There's many places not ready for dynamic spawns. This allows them to live on for now.
+        void SetRespawnCompatibilityMode(bool mode = true) { m_respawnCompatibilityMode = mode; }
+        bool GetRespawnCompatibilityMode() {return m_respawnCompatibilityMode; }
 
         uint64 GetRotation() const { return m_rotation; }
         virtual uint32 GetScriptId() const { return GetGOInfo()->ScriptId; }
@@ -894,5 +918,6 @@ class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>
             return IsInRange(obj->GetPositionX(), obj->GetPositionY(), obj->GetPositionZ(), dist2compare);
         }
         GameObjectAI* m_AI;
+        bool m_respawnCompatibilityMode;
 };
 #endif

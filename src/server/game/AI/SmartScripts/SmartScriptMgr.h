@@ -552,8 +552,12 @@ enum SMART_ACTION
     SMART_ACTION_RISE_UP                            = 114,    // distance
     SMART_ACTION_RANDOM_SOUND                       = 115,    // soundId1, soundId2, soundId3, soundId4, soundId5, onlySelf
     SMART_ACTION_SET_CORPSE_DELAY                   = 116,    // timer
+    SMART_ACTION_SPAWN_CREATUREGROUP                = 117,    // Group ID, min secs, max secs
+    SMART_ACTION_DESPAWN_CREATUREGROUP              = 118,    // Group ID, min secs, max secs
+    SMART_ACTION_SPAWN_GAMEOBJECTGROUP              = 119,    // Group ID, min secs, max secs
+    SMART_ACTION_DESPAWN_GAMEOBJECTGROUP            = 120,    // Group ID, min secs, max secs
 
-    SMART_ACTION_END                                = 117
+    SMART_ACTION_END                                = 121
 };
 
 struct SmartAction
@@ -1040,6 +1044,14 @@ struct SmartAction
             uint32 timer;
         } corpseDelay;
 
+        struct
+        {
+            uint32 groupId;
+            uint32 minDelay;
+            uint32 maxDelay;
+            uint32 spawnflags;
+        } groupSpawn;
+
         //! Note for any new future actions
         //! All parameters must have type uint32
 
@@ -1053,6 +1065,14 @@ struct SmartAction
             uint32 param6;
         } raw;
     };
+};
+
+enum SMARTAI_SPAWN_FLAGS
+{
+    SMARTAI_SPAWN_FLAG_NONE                 = 0x00,
+    SMARTAI_SPAWN_FLAG_IGNORE_RESPAWN       = 0x01,
+    SMARTAI_SPAWN_FLAG_FORCE_SPAWN          = 0x02,
+    SMARTAI_SPAWN_FLAG_NOSAVE_RESPAWN       = 0x04,
 };
 
 enum SMARTAI_TEMPLATE

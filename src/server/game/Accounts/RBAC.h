@@ -701,6 +701,12 @@ enum RBACPermissions
     RBAC_PERM_COMMAND_PET_LEVEL                              = 838,
     RBAC_PERM_COMMAND_SERVER_SHUTDOWN_FORCE                  = 839,
     RBAC_PERM_COMMAND_SERVER_RESTART_FORCE                   = 840,
+    RBAC_PERM_COMMAND_NPC_SPAWNGROUP                         = 841,
+    RBAC_PERM_COMMAND_NPC_DESPAWNGROUP                       = 842,
+    RBAC_PERM_COMMAND_GOBJECT_SPAWNGROUP                     = 843,
+    RBAC_PERM_COMMAND_GOBJECT_DESPAWNGROUP                   = 844,
+    RBAC_PERM_COMMAND_LIST_RESPAWNS                          = 845,
+    RBAC_PERM_COMMAND_DEBUG_DYNAMICFACTOR                    = 846,
 
     // custom permissions 1000+
     RBAC_PERM_MAX
