@@ -565,7 +565,7 @@ void BossAI::_DespawnAtEvade(uint32 delayToRespawn, Creature* who)
         return;
     }
 
-    who->DespawnOrUnsummon(delayToRespawn > 1000 ? 1000 : delayToRespawn, delayToRespawn);
+    who->DespawnOrUnsummon(0, delayToRespawn);
 
     if (instance && who == me)
         instance->SetBossState(_bossId, FAIL);
