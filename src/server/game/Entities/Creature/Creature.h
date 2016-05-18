@@ -616,7 +616,7 @@ class TC_GAME_API Creature : public Unit, public GridObject<Creature>, public Ma
 
         void RemoveCorpse(bool setSpawnTime = true);
 
-        void DespawnOrUnsummon(uint32 msTimeToDespawn = 0, uint32 forceRespawnTime = 0);
+        void DespawnOrUnsummon(uint32 msTimeToDespawn = 0, Seconds forceRespawnTime = Seconds(0));
 
         time_t const& GetRespawnTime() const { return m_respawnTime; }
         time_t GetRespawnTimeEx() const;
@@ -777,7 +777,7 @@ class TC_GAME_API Creature : public Unit, public GridObject<Creature>, public Ma
         bool CanAlwaysSee(WorldObject const* obj) const override;
 
     private:
-        void ForcedDespawn(uint32 timeMSToDespawn = 0, uint32 respawnTime = 0);
+        void ForcedDespawn(uint32 timeMSToDespawn = 0, Seconds respawnTime = Seconds(0));
         bool CheckNoGrayAggroConfig(uint32 playerLevel, uint32 creatureLevel) const; // No aggro from gray creatures
 
         //WaypointMovementGenerator vars

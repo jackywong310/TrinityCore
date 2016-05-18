@@ -1795,7 +1795,7 @@ void Creature::Respawn(bool force)
 
 }
 
-void Creature::ForcedDespawn(uint32 timeMSToDespawn, uint32 respawnTime)
+void Creature::ForcedDespawn(uint32 timeMSToDespawn, Seconds respawnTime)
 {
     if (timeMSToDespawn)
     {
@@ -1814,14 +1814,15 @@ void Creature::ForcedDespawn(uint32 timeMSToDespawn, uint32 respawnTime)
     }
     else
     {
-        if (respawnTime != 0)
+        if (respawnTime.count() != 0)
             m_respawnTime = time(NULL) + m_respawnDelay;
-        SaveRespawnTime(respawnTime ? time(NULL) + respawnTime : 0);
+
+        SaveRespawnTime(respawnTime.count());
         AddObjectToRemoveList();
     }
 }
 
-void Creature::DespawnOrUnsummon(uint32 msTimeToDespawn /*= 0*/, uint32 forceRespawnTime)
+void Creature::DespawnOrUnsummon(uint32 msTimeToDespawn /*= 0*/, Seconds forceRespawnTime)
 {
     if (TempSummon* summon = this->ToTempSummon())
         summon->UnSummon(msTimeToDespawn);
