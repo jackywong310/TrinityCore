@@ -256,4 +256,4 @@ INSERT INTO `command` (`name`, `permission`, `help`) VALUES
 ('npc despawngroup', 838, 'Syntax: .npc despawngroup $groupId [removerespawntime]'),
 ('gobject spawngroup', 839, 'Syntax: .gobject spawngroup $groupId [ignorerespawn] [force]'),
 ('gobject despawngroup', 840, 'Syntax: .gobject despawngroup $groupId [removerespawntime]'),
-('list respawns', 841, 'Syntax: .list respawns [*] (Enter * for all respawns within current map)');
+('list respawns', 841, 'Syntax: .list respawns [*] [grid] (Enter * for all respawns within current map, or grid for all in current grid)');

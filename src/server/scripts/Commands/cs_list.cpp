@@ -651,10 +651,14 @@ public:
         if (!map)
             return false;
 
-        bool scopeOnly = true;
+        bool allMaps = false;
+        uint32 grid = 0;
 
+        // Accept arguments for all respawns for this map, or grid level.
         if (*args && strcmp(args,"*") == 0)
-            scopeOnly = true;
+            allMaps = true;
+        else if (*args  && strcmp(args, "grid") == 0)
+            grid = Trinity::ComputeGridCoord(player->GetPositionX(), player->GetPositionY()).GetId();
 
         RespawnVector respawns;
         LocaleConstant locale = handler->GetSession()->GetSessionDbcLocale();
@@ -662,7 +666,7 @@ public:
         char const* stringCreature = sObjectMgr->GetTrinityString(LANG_LIST_RESPAWNS_CREATURES, locale);
         char const* stringGameobject = sObjectMgr->GetTrinityString(LANG_LIST_RESPAWNS_GAMEOBJECTS, locale);
 
-        if (map->GetRespawnData(respawns, Map::OBJECT_TYPE_CREATURE, false, 0, 0, scopeOnly, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ()))
+        if (map->GetRespawnData(respawns, Map::OBJECT_TYPE_CREATURE, false, 0, grid, allMaps, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ()))
         {
             handler->PSendSysMessage(LANG_LIST_RESPAWNS, stringCreature);
             handler->PSendSysMessage(LANG_LIST_RESPAWNS_LISTHEADER);
@@ -678,7 +682,7 @@ public:
         }
 
         respawns.clear();
-        if (map->GetRespawnData(respawns, Map::OBJECT_TYPE_GAMEOBJECT, false, 0, 0, scopeOnly, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ()))
+        if (map->GetRespawnData(respawns, Map::OBJECT_TYPE_GAMEOBJECT, false, 0, grid, allMaps, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ()))
         {
             handler->PSendSysMessage(LANG_LIST_RESPAWNS, stringGameobject);
             handler->PSendSysMessage(LANG_LIST_RESPAWNS_LISTHEADER);
